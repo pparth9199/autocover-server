@@ -65,7 +65,6 @@ Start the letter with “Dear Hiring Manager,” unless a name is specified. Be 
 
         data = response.json()
         result = data.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-        logger.debug(data)
         try:
             result = result.strip().strip("```json").strip("```").strip()
             parsed = json.loads(result)
@@ -79,5 +78,10 @@ Start the letter with “Dear Hiring Manager,” unless a name is specified. Be 
         return { "letter": letter, "company": company }
 
     except Exception as e:
-        print("Gemini error:", e)
         return { "letter": "Error generating letter", "company": "company" }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))  # Render will inject $PORT
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
